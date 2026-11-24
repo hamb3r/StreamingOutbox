@@ -1,0 +1,23 @@
+name: CI (Lint + Unit + Integration)
+
+on:
+  push:
+    branches:
+      - feat/wal-and-hourly-partitions
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Lint (dotnet format --verify-no-changes on .NET 8)
+        run: bash scripts/lint.sh
+
+      - name: Full test suite (unit + live PostgreSQL 17 & Kafka 3.9 integration)
+        run: bash scripts/test.sh
